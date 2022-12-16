@@ -1,0 +1,24 @@
+{
+  "parameters": [
+    ["SRA990","&RetSQLName('SRA')"],
+    ["SRD990","&RetSQLName('SRD')"],
+    ["SRV990","&RetSQLName('SRV')"],
+    ["ZY_990","&RetSQLName('ZY_')"],
+    ["CTT990","&RetSQLName('CTT')"],
+    ["SRJ990","&RetSQLName('SRJ')"],
+    ["!FILIALDE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALDE!','')"],
+    ["!FILIALATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALATE!','')"],
+    ["!DATARQDE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQDE!','')"],
+    ["!DATARQATE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQATE!','')"],
+    ["!GRUPODE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPODE!','')"],
+    ["!GRUPOATE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPOATE!','')"],
+    ["!CCDE!","&cacheData():get('AFXUTILS_PARAMETERS','!CCDE!','')"],
+    ["!CCATE!","&cacheData():get('AFXUTILS_PARAMETERS','!CCATE!','')"],
+    ["!VERBADE!","&cacheData():get('AFXUTILS_PARAMETERS','!VERBADE!','')"],
+    ["!VERBAATE!","&cacheData():get('AFXUTILS_PARAMETERS','!VERBAATE!','')"],
+    ["!FUNCAODE!","&cacheData():get('AFXUTILS_PARAMETERS','!FUNCAODE!','')"],
+    ["!FUNCAOATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FUNCAOATE!','')"],   
+    ["!MATRICULADE!","&cacheData():get('AFXUTILS_PARAMETERS','!MATRICULADE!','')"],
+    ["!MATRICULAATE!","&cacheData():get('AFXUTILS_PARAMETERS','!MATRICULAATE!','')"]
+  ]
+}

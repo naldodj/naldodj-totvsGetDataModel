@@ -1,0 +1,71 @@
+--Set the options to support indexed views.
+SET NUMERIC_ROUNDABORT OFF;
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT,
+   QUOTED_IDENTIFIER, ANSI_NULLS ON;
+--Create view with schemabinding.
+IF OBJECT_ID ('dbo.v99GRPVERBASFUNCAO', 'view') IS NOT NULL
+begin
+    DROP VIEW dbo.v99GRPVERBASFUNCAO ;
+end
+GO
+CREATE VIEW dbo.v99GRPVERBASFUNCAO
+   WITH SCHEMABINDING
+   AS  
+      WITH _CTE AS (
+		SELECT SRA.RA_FILIAL
+		  ,SRD.RD_FILIAL
+		  ,SRD.RD_DATARQ
+          ,SRD.RD_CC
+		  ,SRD.RD_PD
+		  ,SRA.RA_CODFUNC
+		  ,SUM(SRD.RD_VALOR) RD_VALOR
+		  FROM dbo.SRD990 SRD 
+		  JOIN dbo.SRA990 SRA ON (SRA.RA_FILIAL=SRD.RD_FILIAL AND SRA.RA_MAT=SRD.RD_MAT)
+		 WHERE SRD.D_E_L_E_T_= ' '
+		   AND SRA.D_E_L_E_T_= '' 
+	  GROUP BY SRA.RA_FILIAL
+		      ,SRD.RD_FILIAL
+		      ,SRD.RD_DATARQ
+              ,SRD.RD_CC
+		      ,SRD.RD_PD
+		      ,SRA.RA_CODFUNC
+	  )
+	  SELECT _CTE.RA_FILIAL
+            ,_CTE.RD_DATARQ
+            ,_CTE.RD_CC
+            ,CTT.CTT_DESC01
+            ,ZY_.ZY__MASTER
+            ,ZY_.ZY__CODIGO
+            ,ZY_.ZY__DESC
+			,RTRIM(LTRIM(CONVERT(VARCHAR(1024),ZY_.ZY__HTML))) ZY__HTML
+            ,SRV.RV_COD
+            ,SRV.RV_DESC
+            ,SRJ.RJ_FUNCAO
+            ,SRJ.RJ_DESC
+            ,SUM(_CTE.RD_VALOR) RD_VALOR
+            ,COUNT_BIG(*) as tmp
+      FROM _CTE
+      JOIN dbo.CTT990 CTT ON (CTT.CTT_CUSTO=_CTE.RD_CC)
+      JOIN dbo.SRV990 SRV ON (_CTE.RD_PD=SRV.RV_COD)
+      JOIN dbo.ZY_990 ZY_ ON (SRV.RV_ZY__COD=ZY_.ZY__CODIGO)
+      JOIN dbo.SRJ990 SRJ ON (_CTE.RA_CODFUNC=SRJ.RJ_FUNCAO)
+     WHERE SRV.D_E_L_E_T_=' '
+       AND ZY_.D_E_L_E_T_=' '
+       AND SRJ.D_E_L_E_T_=''
+       AND (CTT.CTT_FILIAL='' OR CTT.CTT_FILIAL=_CTE.RD_CC)
+       AND (SRV.RV_FILIAL='' OR SRV.RV_FILIAL=_CTE.RD_FILIAL)
+       AND (SRJ.RJ_FILIAL='' OR SRJ.RJ_FILIAL=_CTE.RA_FILIAL)
+       AND SRV.RV_ZY__COD<>''
+    GROUP BY _CTE.RA_FILIAL
+            ,_CTE.RD_DATARQ
+            ,_CTE.RD_CC
+            ,CTT.CTT_DESC01
+            ,ZY_.ZY__MASTER
+            ,ZY_.ZY__CODIGO
+            ,ZY_.ZY__DESC
+			,RTRIM(LTRIM(CONVERT(VARCHAR(1024),ZY_.ZY__HTML)))
+            ,SRV.RV_COD
+            ,SRV.RV_DESC
+            ,SRJ.RJ_FUNCAO
+            ,SRJ.RJ_DESC;
+GO

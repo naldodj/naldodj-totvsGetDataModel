@@ -1,0 +1,12 @@
+{
+  "parameters": [
+    ["SRA990","&RetSQLName('SRA')"],
+    ["SRD990","&RetSQLName('SRD')"],
+    ["SRV990","&RetSQLName('SRV')"],
+    ["ZY_990","&RetSQLName('ZY_')"],
+    ["!DATARQDE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQDE!','')"],
+    ["!DATARQATE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQATE!','')"],
+    ["!GRUPODE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPODE!','')"],
+    ["!GRUPOATE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPOATE!','')"]    
+  ]
+}

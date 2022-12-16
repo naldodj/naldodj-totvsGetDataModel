@@ -1,0 +1,6 @@
+{
+  "parameters": [
+    ["SQB990","&RetSQLName('SQB')"],
+    ["SRA990","&RetSQLName('SRA')"]
+  ]
+}

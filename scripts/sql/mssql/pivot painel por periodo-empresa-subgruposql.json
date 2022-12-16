@@ -1,0 +1,24 @@
+{
+  "parameters": [
+    ["!DATARQDE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQDE!','')"],
+	["!DATARQATE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQATE!','')"],
+	["!FILIALDE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALDE!','')"],
+	["!FILIALATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALATE!','')"],
+	["!GRUPODE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPODE!','')"],
+	["!GRUPOATE!","&cacheData():get('AFXUTILS_PARAMETERS','!GRUPOATE!','')"],
+	["!TTSNAME!","'__tts_afxutils__'"],
+	["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.T.)"],
+	["!PIVOTTABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"],	
+    ["SRD990","&RetSQLName('SRD')"],
+    ["SRV990","&RetSQLName('SRV')"],
+    ["ZY_990","&RetSQLName('ZY_')"]
+  ],
+  "fieldstype": [
+    ["SUBTOTAL","N",16,2],
+    ["PROV13S","N",16,2],
+    ["PROVFER","N",16,2],
+    ["PROVRES","N",16,2],
+    ["PROVTOT","N",16,2],
+    ["TOTAL","N",16,2]
+  ]
+}

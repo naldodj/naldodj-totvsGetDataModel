@@ -1,0 +1,16 @@
+{
+  "parameters": [
+    ["SRA990","&RetSQLName('SRA')"],
+    ["SRD990","&RetSQLName('SRD')"],
+    ["SRE990","&RetSQLName('SRE')"],
+    ["CTT990","&RetSQLName('CTT')"],
+    ["!EMPRESA!","&cacheData():get('AFXUTILS_PARAMETERS','!EMPRESA!','')"],
+    ["!FILIALDE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALDE!','')"],
+    ["!FILIALATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALATE!','')"],
+    ["!DATARQDE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQDE!','')"],
+    ["!DATARQATE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQATE!','')"],
+    ["!CCDE!","&cacheData():get('AFXUTILS_PARAMETERS','!CCDE!','')"],
+    ["!CCATE!","&cacheData():get('AFXUTILS_PARAMETERS','!CCATE!','')"],
+    ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"]    
+  ]
+}

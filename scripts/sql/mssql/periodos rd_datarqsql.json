@@ -1,0 +1,8 @@
+{
+  "parameters": [
+    ["!DATARQDE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQDE!','')"],
+    ["!DATARQATE!","&cacheData():get('AFXUTILS_PARAMETERS','!DATARQATE!','')"],
+    ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"],
+    ["SRD990","&RetSQLName('SRD')"]
+  ]
+}
