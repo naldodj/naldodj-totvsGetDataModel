@@ -93,6 +93,7 @@ function totvsGetDataModelPeriod {
         $fieldDATARQ=$ini.PERIODOS_SRD.fieldDATARQ
 
         $Filter="$fieldDATARQ BETWEEN '$minDatarq' AND '$maxDatarq'"
+        $Filter=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($Filter))
 
         $parModel='{"parameters":['
 
@@ -168,7 +169,7 @@ function totvsGetDataModelPeriod {
             PageNumber=$PageNumber
             RowspPage=$RowspPage
             codModel=$codModel
-            Filter=$Filter
+            Filter64=$Filter
             parModel=$parModel
         }
 
@@ -220,6 +221,7 @@ function totvsGetDataModelPeriod {
             $PeriodoSRD=$Periodo
 
             $Filter="RD_DATARQ='$PeriodoSRD'"
+            $Filter=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($Filter))
 
             $parModel='{"parameters":['
 
@@ -438,7 +440,7 @@ function totvsGetDataModelPeriod {
                 PageNumber=$PageNumber
                 RowspPage=$RowspPage
                 codModel=$codModel
-                Filter=$Filter
+                Filter64=$Filter
                 parModel=$parModel
             }
 
@@ -461,7 +463,7 @@ function totvsGetDataModelPeriod {
                     PageNumber=$PageNumber
                     RowspPage=$RowspPage
                     codModel=$codModel
-                    Filter=$Filter
+                    Filter64=$Filter
                     parModel=$parModel
                 }
                 $params = @{
@@ -560,7 +562,7 @@ function totvsGetDataModelPeriod {
                     PageNumber=$PageNumber
                     RowspPage=$RowspPage
                     codModel=$codModel
-                    Filter=$Filter
+                    Filter64=$Filter
                     parModel=$parModel
                 }
 
