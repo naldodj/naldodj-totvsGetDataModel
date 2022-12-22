@@ -98,43 +98,17 @@ function totvsGetDataModelPeriodAcc {
         $Filter="$fieldDATARQ BETWEEN '$minDatarq' AND '$maxDatarq'"
         $Filter=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($Filter))
 
-        $parModel='{"parameters":['
+        $parameters=@(
+            ("!EMPRESA!","'$codEmp'"),
+            ("!DATARQDE!","'$minDatarq'"),
+            ("!DATARQATE!","'$maxDatarq'")
+        )
 
-        $parModel+='['
-        $parModel+='"!EMPRESA!"'
-        $parModel+=','
-        $parModel+='"'
-        $parModel+=''''
-        $parModel+=$codEmp
-        $parModel+=''''
-        $parModel+='"'
-        $parModel+=']'
+        $parModel=@{
+            parameters=$parameters
+        }
 
-        $parModel+=','
-
-        $parModel+='['
-        $parModel+='"!DATARQDE!"'
-        $parModel+=','
-        $parModel+='"'
-        $parModel+=''''
-        $parModel+=$minDatarq
-        $parModel+=''''
-        $parModel+='"'
-        $parModel+=']'
-
-        $parModel+=','
-
-        $parModel+='['
-        $parModel+='"!DATARQATE!"'
-        $parModel+=','
-        $parModel+='"'
-        $parModel+=''''
-        $parModel+=$maxDatarq
-        $parModel+=''''
-        $parModel+='"'
-        $parModel+=']'
-
-        $parModel+=']}'
+        $parModel=($parModel | ConvertTo-Json)
 
         $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
@@ -228,187 +202,29 @@ function totvsGetDataModelPeriodAcc {
 
             $Filter=""
 
-            $parModel='{"parameters":['
+            $parameters=@(
+                ("!EMPRESA!","'$codEmp'"),
+                ("!DATARQDE!","'$PeriodoSRD+$MonthIni'"),
+                ("!DATARQATE!","'$PeriodoSRD+$MonthFim'"),
+                ("!FILIALDE!","' '"),
+                ("!FILIALATE!","'Z'"),
+                ("!CCDE!","' '"),
+                ("!CCATE!","'Z'"),
+                ("!GRUPODE!","' '"),
+                ("!GRUPOATE!","'Z'"),
+                ("!VERBADE!","' '"),
+                ("!VERBAATE!","'Z'"),
+                ("!FUNCAODE!","' '"),
+                ("!FUNCAOATE!","'Z'"),
+                ("!MATRICULADE!","' '"),
+                ("!MATRICULAATE!","'Z'")
+            )
 
-            $parModel+='['
-            $parModel+='"!EMPRESA!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=$codEmp
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
+            $parModel=@{
+                parameters=$parameters
+            }
 
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!DATARQDE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=$PeriodoSRD+$MonthIni
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!DATARQATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=$PeriodoSRD+$MonthFim
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!FILIALDE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!FILIALATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!CCDE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!CCATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!GRUPODE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!GRUPOATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!VERBADE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!VERBAATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!FUNCAODE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!FUNCAOATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!MATRICULADE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+=' '
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=','
-
-            $parModel+='['
-            $parModel+='"!MATRICULAATE!"'
-            $parModel+=','
-            $parModel+='"'
-            $parModel+=''''
-            $parModel+='Z'
-            $parModel+=''''
-            $parModel+='"'
-            $parModel+=']'
-
-            $parModel+=']}'
+            $parModel=($parModel | ConvertTo-Json)
 
             $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
