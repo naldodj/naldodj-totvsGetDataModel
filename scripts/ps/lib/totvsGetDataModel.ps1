@@ -149,7 +149,7 @@ function totvsGetDataModel {
             parameters=$parameters
         }
         
-        $parModel=($parModel | ConvertTo-Json)
+        $parModel=($parModel | ConvertTo-Json -depth 100 -Compress)
 
         $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
@@ -237,16 +237,16 @@ function totvsGetDataModel {
 
                 $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
 
-                $jsonServerdbJSON='{"'
-                $jsonServerdbJSON+=$jsonServerdbEndPoint
-                $jsonServerdbJSON+='":['
-                $jsonServerdbJSON+='{'
-                $jsonServerdbJSON+='"id":0,'
-                $jsonServerdbJSON+='"data":'
-                $jsonServerdbJSON+=$JsonResult
-                $jsonServerdbJSON+='}'
-                $jsonServerdbJSON+=']'
-                $jsonServerdbJSON+='}'
+                $jsonServerdbJSON=@{
+                    $jsonServerdbEndPoint=@(
+                        @{
+                            id=0
+                            data=$result
+                        }
+                    )
+                }
+                
+                $jsonServerdbJSON=($jsonServerdbJSON | ConvertTo-Json -depth 100 -Compress)
 
                 [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                 if (($lExistOutFile)-and($HasjsonServerHost))

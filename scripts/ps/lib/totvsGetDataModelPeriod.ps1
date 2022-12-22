@@ -89,7 +89,7 @@ function totvsGetDataModelPeriod {
 
         $maxDatarq=(get-date)
         $maxDatarq=($maxDatarq.Year.ToString()+("{0:d2}" -f $maxDatarq.Month))
-        
+
         $fieldDATARQ=$ini.PERIODOS_SRD.fieldDATARQ
 
         $Filter="$fieldDATARQ BETWEEN '$minDatarq' AND '$maxDatarq'"
@@ -105,8 +105,8 @@ function totvsGetDataModelPeriod {
             parameters=$parameters
         }
 
-        $parModel=($parModel | ConvertTo-Json)
-        
+        $parModel=($parModel | ConvertTo-Json -depth 100 -Compress)
+
         $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
         [bool]$HasjsonServerdb=$false
@@ -117,7 +117,7 @@ function totvsGetDataModelPeriod {
         catch {
             $HasjsonServerdb=$false
         }
-        
+
         [bool]$HasjsonServerHost=$false
         try {
              $jsonServerHost=$ini.jsonserver.Host
@@ -219,7 +219,7 @@ function totvsGetDataModelPeriod {
             parameters=$parameters
             }
 
-            $parModel=($parModel | ConvertTo-Json)
+            $parModel=($parModel | ConvertTo-Json -depth 100 -Compress)
 
             $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
@@ -331,40 +331,40 @@ function totvsGetDataModelPeriod {
                 $OutFile+=$sTotalPages
                 $OutFile+=".json"
 
-                $JsonResult=($result | ConvertTo-Json -depth 100 -Compress )
+                $JsonResult=$result | ConvertTo-Json -depth 100 -Compress )
 
                 [System.IO.File]::WriteAllLines($OutFile,$JsonResult,$Utf8NoBomEncoding)
 
                 if ($HasjsonServerdb){
 
                     $OutFile=$OutFile.Replace($jsonPath,$jsonServerdb)
-                    
+
                     $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
 
-                    $jsonServerdbJSON='{"'
-                    $jsonServerdbJSON+=$jsonServerdbEndPoint
-                    $jsonServerdbJSON+='":['
-                    $jsonServerdbJSON+='{'
-                    $jsonServerdbJSON+='"id":0,'
-                    $jsonServerdbJSON+='"data":'
-                    $jsonServerdbJSON+=$JsonResult
-                    $jsonServerdbJSON+='}'
-                    $jsonServerdbJSON+=']'
-                    $jsonServerdbJSON+='}'
+                    $jsonServerdbJSON=@{
+                        $jsonServerdbEndPoint=@(
+                            @{
+                                id=0
+                                data=$result
+                            }
+                        )
+                    }
+
+                    $jsonServerdbJSON=($jsonServerdbJSON | ConvertTo-Json -depth 100 -Compress)
 
                     [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                     if (($lExistOutFile)-and($HasjsonServerHost))
                     {
                         $params = @{
-                            Uri=$jsonServerHost+$jsonServerdbEndPoint                        
+                            Uri=$jsonServerHost+$jsonServerdbEndPoint
                             Method="POST"
                             ContentType=$ContentType
                             Body=$jsonServerdbJSON
                         }
                         Invoke-RestMethod @params
-                    } else {  
+                    } else {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
-                    }   
+                    }
 
                 }
 
