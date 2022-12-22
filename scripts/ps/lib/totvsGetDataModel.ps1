@@ -226,6 +226,10 @@ function totvsGetDataModel {
             $OutFile+="_"
             $OutFile+=$sTotalPages
             $OutFile+=".json"
+            
+            if ($OutFile.Contains("__.json")){
+                break
+            }
 
             $JsonResult=($result | ConvertTo-Json -depth 100 -Compress )
 
