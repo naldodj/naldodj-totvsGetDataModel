@@ -153,6 +153,7 @@ function totvsGetDataModelPeriod {
             Method="GET"
             ContentType=$ContentType
             Body=$Body
+            TimeoutSec=0
         }
 
         $resultPeriodosSRD=Invoke-RestMethod @params
@@ -266,6 +267,7 @@ function totvsGetDataModelPeriod {
                 Method="GET"
                 ContentType=$ContentType
                 Body=$Body
+                TimeoutSec=0
             }
 
             $result=Invoke-RestMethod @params
@@ -288,6 +290,7 @@ function totvsGetDataModelPeriod {
                     Method="GET"
                     ContentType=$ContentType
                     Body=$Body
+                    TimeoutSec=0
                 }
                 $result=Invoke-RestMethod @params
             }
@@ -330,7 +333,7 @@ function totvsGetDataModelPeriod {
                 $OutFile+="_"
                 $OutFile+=$sTotalPages
                 $OutFile+=".json"
-                
+
                 if ($OutFile.Contains("__.json")){
                     break
                 }
@@ -364,8 +367,14 @@ function totvsGetDataModelPeriod {
                             Method="POST"
                             ContentType=$ContentType
                             Body=$jsonServerdbJSON
+                            TimeoutSec=0
                         }
-                        Invoke-RestMethod @params
+                        try {
+                            Invoke-RestMethod @params
+                        } catch {
+                            Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                            Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                        }
                     } else {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                     }
@@ -392,6 +401,7 @@ function totvsGetDataModelPeriod {
                     Method="GET"
                     ContentType=$ContentType
                     Body=$Body
+                    TimeoutSec=0
                 }
 
                 $result=Invoke-RestMethod @params

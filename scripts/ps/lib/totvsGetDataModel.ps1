@@ -148,7 +148,7 @@ function totvsGetDataModel {
         $parModel=@{
             parameters=$parameters
         }
-        
+
         $parModel=($parModel | ConvertTo-Json -depth 100 -Compress)
 
         $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
@@ -166,6 +166,7 @@ function totvsGetDataModel {
             Method="GET"
             ContentType=$ContentType
             Body=$Body
+            TimeoutSec=0
         }
 
         $result=Invoke-RestMethod @params
@@ -187,6 +188,7 @@ function totvsGetDataModel {
                 Method="GET"
                 ContentType=$ContentType
                 Body=$Body
+                TimeoutSec=0
             }
             $result=Invoke-RestMethod @params
         }
@@ -226,7 +228,7 @@ function totvsGetDataModel {
             $OutFile+="_"
             $OutFile+=$sTotalPages
             $OutFile+=".json"
-            
+
             if ($OutFile.Contains("__.json")){
                 break
             }
@@ -249,22 +251,28 @@ function totvsGetDataModel {
                         }
                     )
                 }
-                
+
                 $jsonServerdbJSON=($jsonServerdbJSON | ConvertTo-Json -depth 100 -Compress)
 
                 [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                 if (($lExistOutFile)-and($HasjsonServerHost))
                 {
                     $params = @{
-                        Uri=$jsonServerHost+$jsonServerdbEndPoint                        
+                        Uri=$jsonServerHost+$jsonServerdbEndPoint
                         Method="POST"
                         ContentType=$ContentType
                         Body=$jsonServerdbJSON
+                        TimeoutSec=0
                     }
-                    Invoke-RestMethod @params
-                } else {  
+                    try {
+                        Invoke-RestMethod @params
+                    } catch {
+                        Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                        Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                    }
+                } else {
                     [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
-                }   
+                }
 
             }
 
@@ -287,6 +295,7 @@ function totvsGetDataModel {
                 Method="GET"
                 ContentType=$ContentType
                 Body=$Body
+                TimeoutSec=0
             }
 
             $result=Invoke-RestMethod @params

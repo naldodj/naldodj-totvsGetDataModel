@@ -92,7 +92,7 @@ function totvsGetDataModelPeriodAcc {
 
         $maxDatarq=(get-date)
         $maxDatarq=($maxDatarq.Year.ToString()+("{0:d2}" -f $maxDatarq.Month))
-        
+
         $fieldDATARQ=$ini.PERIODOS_SRD.fieldDATARQ
 
         $Filter="$fieldDATARQ BETWEEN '$minDatarq' AND '$maxDatarq'"
@@ -120,7 +120,7 @@ function totvsGetDataModelPeriodAcc {
         catch {
             $HasjsonServerdb=$false
         }
-        
+
         [bool]$HasjsonServerHost=$false
         try {
              $jsonServerHost=$ini.jsonserver.Host
@@ -156,6 +156,7 @@ function totvsGetDataModelPeriodAcc {
             Method="GET"
             ContentType=$ContentType
             Body=$Body
+            TimeoutSec=0
         }
 
         $resultPeriodosSRD=Invoke-RestMethod @params
@@ -204,8 +205,8 @@ function totvsGetDataModelPeriodAcc {
 
             $parameters=@(
                 ("!EMPRESA!","'$codEmp'"),
-                ("!DATARQDE!","'$PeriodoSRD+$MonthIni'"),
-                ("!DATARQATE!","'$PeriodoSRD+$MonthFim'"),
+                ("!DATARQDE!","'$PeriodoSRD$MonthIni'"),
+                ("!DATARQATE!","'$PeriodoSRD$MonthFim'"),
                 ("!FILIALDE!","' '"),
                 ("!FILIALATE!","'Z'"),
                 ("!CCDE!","' '"),
@@ -271,6 +272,7 @@ function totvsGetDataModelPeriodAcc {
                 Method="GET"
                 ContentType=$ContentType
                 Body=$Body
+                TimeoutSec=0
             }
 
             $result=Invoke-RestMethod @params
@@ -293,6 +295,7 @@ function totvsGetDataModelPeriodAcc {
                     Method="GET"
                     ContentType=$ContentType
                     Body=$Body
+                    TimeoutSec=0
                 }
                 $result=Invoke-RestMethod @params
             }
@@ -349,7 +352,7 @@ function totvsGetDataModelPeriodAcc {
                     $OutFile=$OutFile.Replace($jsonPath,$jsonServerdb)
 
                     $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
-                    
+
                     $jsonServerdbJSON=@{
                         $jsonServerdbEndPoint=@(
                             @{
@@ -358,22 +361,28 @@ function totvsGetDataModelPeriodAcc {
                             }
                         )
                     }
-                    
+
                     $jsonServerdbJSON=($jsonServerdbJSON | ConvertTo-Json -depth 100 -Compress)
 
                     [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                     if (($lExistOutFile)-and($HasjsonServerHost))
                     {
                         $params = @{
-                            Uri=$jsonServerHost+$jsonServerdbEndPoint                        
+                            Uri=$jsonServerHost+$jsonServerdbEndPoint
                             Method="POST"
                             ContentType=$ContentType
                             Body=$jsonServerdbJSON
+                            TimeoutSec=0
                         }
-                        Invoke-RestMethod @params
-                    } else {  
+                        try {
+                            Invoke-RestMethod @params
+                        } catch {
+                            Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                            Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                        }
+                    } else {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
-                    }   
+                    }
 
 
                 }
@@ -398,6 +407,7 @@ function totvsGetDataModelPeriodAcc {
                     Method="GET"
                     ContentType=$ContentType
                     Body=$Body
+                    TimeoutSec=0
                 }
 
                 $result=Invoke-RestMethod @params
