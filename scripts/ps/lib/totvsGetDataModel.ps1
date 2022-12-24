@@ -82,22 +82,22 @@ function totvsGetDataModel {
         $codEmp=$ini.rest.codEmp
         $codModel=$ini.rest.codModel
 
-        [bool]$HasjsonServerdb=$false
+        [bool]$HasjsonServerdb=$False
         try {
              $jsonServerdb=$ini.jsonserver.db
              $HasjsonServerdb=($jsonServerdb -ne $null)
         }
         catch {
-            $HasjsonServerdb=$false
+            $HasjsonServerdb=$False
         }
 
-        [bool]$HasjsonServerHost=$false
+        [bool]$HasjsonServerHost=$False
         try {
              $jsonServerHost=$ini.jsonserver.Host
              $HasjsonServerHost=($jsonServerHost -ne $null)
         }
         catch {
-            $HasjsonServerHost=$false
+            $HasjsonServerHost=$False
         }
 
         $jsonPath=$ini.rest.jsonPath
@@ -190,7 +190,16 @@ function totvsGetDataModel {
                 Body=$Body
                 TimeoutSec=0
             }
-            $result=Invoke-RestMethod @params
+
+            try {
+                $result=Invoke-RestMethod @params
+            } catch {
+                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                Write-Host $_
+                continue
+            }            
+            
         }
         else
         {
@@ -269,6 +278,7 @@ function totvsGetDataModel {
                     } catch {
                         Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
                         Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                        Write-Host $_
                     }
                 } else {
                     [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
@@ -298,9 +308,15 @@ function totvsGetDataModel {
                 TimeoutSec=0
             }
 
-            $result=Invoke-RestMethod @params
-
-            $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
+            try {
+                $result=Invoke-RestMethod @params
+                $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
+            } catch {
+                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                Write-Host $_
+                $hasNextPage=$False
+            }            
 
         } while ($hasNextPage)
 

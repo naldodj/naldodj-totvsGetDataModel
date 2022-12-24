@@ -109,22 +109,22 @@ function totvsGetDataModelPeriod {
 
         $parModel=[Convert]::ToBase64String($Utf8NoBomEncoding::UTF8.GetBytes($parModel))
 
-        [bool]$HasjsonServerdb=$false
+        [bool]$HasjsonServerdb=$False
         try {
              $jsonServerdb=$ini.jsonserver.db
              $HasjsonServerdb=($jsonServerdb -ne $null)
         }
         catch {
-            $HasjsonServerdb=$false
+            $HasjsonServerdb=$False
         }
 
-        [bool]$HasjsonServerHost=$false
+        [bool]$HasjsonServerHost=$False
         try {
              $jsonServerHost=$ini.jsonserver.Host
              $HasjsonServerHost=($jsonServerHost -ne $null)
         }
         catch {
-            $HasjsonServerHost=$false
+            $HasjsonServerHost=$False
         }
 
         $msgProcess0=$codModel
@@ -270,7 +270,14 @@ function totvsGetDataModelPeriod {
                 TimeoutSec=0
             }
 
-            $result=Invoke-RestMethod @params
+            try {
+                $result=Invoke-RestMethod @params
+            } catch {
+                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                Write-Host $_
+                continue
+            }
 
             if ($result.TotalPages -ne $RowspPageMax)
             {
@@ -292,7 +299,16 @@ function totvsGetDataModelPeriod {
                     Body=$Body
                     TimeoutSec=0
                 }
-                $result=Invoke-RestMethod @params
+                
+                try {
+                    $result=Invoke-RestMethod @params
+                } catch {
+                    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                    Write-Host $_
+                    continue
+                }
+
             }
             else
             {
@@ -374,6 +390,7 @@ function totvsGetDataModelPeriod {
                         } catch {
                             Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
                             Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                            Write-Host $_
                         }
                     } else {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
@@ -404,9 +421,15 @@ function totvsGetDataModelPeriod {
                     TimeoutSec=0
                 }
 
-                $result=Invoke-RestMethod @params
-
-                $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
+                try {
+                    $result=Invoke-RestMethod @params
+                    $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
+                } catch {
+                    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                    Write-Host $_
+                    $hasNextPage=$False
+                }            
 
                 start-sleep -Seconds .05
 
