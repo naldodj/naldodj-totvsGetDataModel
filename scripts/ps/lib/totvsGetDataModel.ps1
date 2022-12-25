@@ -315,7 +315,6 @@ function totvsGetDataModel {
                 {
                     $jsonServerdbEndPoint += "/0"
                     $jsonServerURI += $jsonServerdbEndPoint
-                    Clear-Variable jsonServerdbJSON
                     $params = @{
                         Uri=$jsonServerURI
                         Method="PUT"
@@ -331,6 +330,7 @@ function totvsGetDataModel {
                     }
                     Clear-Variable params
                     Clear-Variable jsonServerResult
+                    Clear-Variable jsonServerdbJSON                   
                 } else {
                     [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                 }
