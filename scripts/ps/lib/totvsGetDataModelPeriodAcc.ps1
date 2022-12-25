@@ -394,12 +394,14 @@ function totvsGetDataModelPeriodAcc {
 
                     $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
 
+                    $jsonServerdbEndPointData=@{
+                        id=0
+                        data=$result
+                    }
+                    
                     $jsonServerdbJSON=@{
                         $jsonServerdbEndPoint=@(
-                            @{
-                                id=0
-                                data=$result
-                            }
+                            $jsonServerdbEndPointData
                         )
                     }
 
@@ -423,7 +425,7 @@ function totvsGetDataModelPeriodAcc {
                             Uri=$jsonServerURI
                             Method="PUT"
                             ContentType=$ContentType
-                            Body=$jsonServerdbJSON
+                            Body=($jsonServerdbEndPointData | ConvertTo-Json -depth 100 -Compress)
                             TimeoutSec=0
                         }
                         try {

@@ -269,12 +269,14 @@ function totvsGetDataModel {
 
                 $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
 
+                $jsonServerdbEndPointData=@{
+                    id=0
+                    data=$result
+                }
+                
                 $jsonServerdbJSON=@{
                     $jsonServerdbEndPoint=@(
-                        @{
-                            id=0
-                            data=$result
-                        }
+                        $jsonServerdbEndPointData
                     )
                 }
 
@@ -296,10 +298,10 @@ function totvsGetDataModel {
                     $jsonServerdbEndPoint += "/0"
                     $jsonServerURI += $jsonServerdbEndPoint
                     $params = @{
-                        Uri=$jsonServerHost+$jsonServerdbEndPoint
-                        Method="POST"
+                        Uri=$jsonServerURI
+                        Method="PUT"
                         ContentType=$ContentType
-                        Body=$jsonServerdbJSON
+                        Body=($jsonServerdbEndPointData | ConvertTo-Json -depth 100 -Compress)
                         TimeoutSec=0
                     }
                     try {

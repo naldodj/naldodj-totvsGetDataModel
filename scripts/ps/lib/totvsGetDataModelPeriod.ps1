@@ -388,12 +388,14 @@ function totvsGetDataModelPeriod {
 
                     $jsonServerdbEndPoint=$OutFile.Replace($jsonServerdb,"")
 
+                    $jsonServerdbEndPointData=@{
+                        id=0
+                        data=$result
+                    }
+                    
                     $jsonServerdbJSON=@{
                         $jsonServerdbEndPoint=@(
-                            @{
-                                id=0
-                                data=$result
-                            }
+                            $jsonServerdbEndPointData
                         )
                     }
 
@@ -414,10 +416,10 @@ function totvsGetDataModelPeriod {
                         $jsonServerdbEndPoint += "/0"
                         $jsonServerURI += $jsonServerdbEndPoint
                         $params = @{
-                            Uri=$jsonServerHost+$jsonServerdbEndPoint
+                            Uri=$jsonServerURI
                             Method="PUT"
                             ContentType=$ContentType
-                            Body=$jsonServerdbJSON
+                            Body=($jsonServerdbEndPointData | ConvertTo-Json -depth 100 -Compress)
                             TimeoutSec=0
                         }
                         try {
