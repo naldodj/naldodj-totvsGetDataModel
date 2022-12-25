@@ -82,10 +82,12 @@ function totvsGetDataModel {
         $SystemUri = [System.Uri]$Uri
         $tcpClient = New-Object System.Net.Sockets.TCPClient
         $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+        Clear-Variable SystemUri
         if (-not $tcpClient.Connected) {
             return $False
         }
         $tcpClient.close()
+        Clear-Variable tcpClient
 
         $Auth=$ini.rest.Auth
         $codEmp=$ini.rest.codEmp
@@ -109,10 +111,12 @@ function totvsGetDataModel {
                 $SystemUri = [System.Uri]$jsonServerURI
                 $tcpClient = New-Object System.Net.Sockets.TCPClient
                 $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+                Clear-Variable SystemUri
                 $HasjsonServerHost = $tcpClient.Connected
                 if ($HasjsonServerHost) {
                     $tcpClient.close()
                 }
+                Clear-Variable tcpClient
              }
         }
         catch {
@@ -120,6 +124,9 @@ function totvsGetDataModel {
         }
 
         $jsonPath=$ini.rest.jsonPath
+        
+        Clear-Variable ini
+        
         if (-not $jsonPath.EndsWith("\"))
         {
             $jsonPath+="\"
@@ -189,6 +196,9 @@ function totvsGetDataModel {
         }
 
         $result=Invoke-RestMethod @params
+        
+        Clear-Variable Body
+        Clear-Variable params
 
         if ($result.TotalPages -ne $RowspPageMax)
         {
@@ -211,11 +221,15 @@ function totvsGetDataModel {
             }
 
             try {
+                Clear-Variable result
                 $result=Invoke-RestMethod @params
             } catch {
                 Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                 continue
             }
+            
+            Clear-Variable Body
+            Clear-Variable params
 
         }
         else
@@ -262,6 +276,8 @@ function totvsGetDataModel {
             $JsonResult=($result | ConvertTo-Json -depth 100 -Compress )
 
             [System.IO.File]::WriteAllLines($OutFile,$JsonResult,$Utf8NoBomEncoding)
+            
+            Clear-Variable JsonResult
 
             if ($HasjsonServerdb){
 
@@ -287,16 +303,19 @@ function totvsGetDataModel {
                 $SystemUri = [System.Uri]$jsonServerURI
                 $tcpClient = New-Object System.Net.Sockets.TCPClient
                 $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+                Clear-Variable SystemUri
                 $Connected = $tcpClient.Connected
                 if ($Connected) {
                     $tcpClient.close()
                 }
+                Clear-Variable tcpClient
 
                 [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                 if (($lExistOutFile)-and($HasjsonServerHost)-and($Connected))
                 {
                     $jsonServerdbEndPoint += "/0"
                     $jsonServerURI += $jsonServerdbEndPoint
+                    Clear-Variable jsonServerdbJSON
                     $params = @{
                         Uri=$jsonServerURI
                         Method="PUT"
@@ -310,9 +329,14 @@ function totvsGetDataModel {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                         Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                     }
+                    Clear-Variable params
+                    Clear-Variable jsonServerResult
                 } else {
                     [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                 }
+                
+                Clear-Variable jsonServerdbEndPointData
+                Clear-Variable jsonServerdbJSON
 
             }
 
@@ -339,12 +363,16 @@ function totvsGetDataModel {
             }
 
             try {
+                Clear-Variable result
                 $result=Invoke-RestMethod @params
                 $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
             } catch {
                 $hasNextPage=$False
                 Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
             }
+
+            Clear-Variable Body
+            Clear-Variable params
 
         } while ($hasNextPage)
 
