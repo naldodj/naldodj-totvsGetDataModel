@@ -77,10 +77,20 @@ function totvsGetDataModelPeriodAcc {
 
         clear-host
 
+        $Uri=$ini.PERIODOS_SRD.EndPoint
+
+        $SystemUri = [System.Uri]$Uri
+
+        $tcpClient = New-Object System.Net.Sockets.TCPClient
+        $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+        if (-not $tcpClient.Connected) {
+            return $False
+        }
+        $tcpClient.close()
+
         $MonthIni="01"
         $MonthFim="12"
 
-        $Uri=$ini.PERIODOS_SRD.EndPoint
         $Auth=$ini.PERIODOS_SRD.Auth
 
         $codEmp=$ini.PERIODOS_SRD.codEmp
@@ -125,6 +135,16 @@ function totvsGetDataModelPeriodAcc {
         try {
              $jsonServerHost=$ini.jsonserver.Host
              $HasjsonServerHost=($jsonServerHost -ne $null)
+             if ($HasjsonServerHost){
+                $jsonServerURI = $jsonServerHost
+                $SystemUri = [System.Uri]$jsonServerURI
+                $tcpClient = New-Object System.Net.Sockets.TCPClient
+                $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+                $HasjsonServerHost = $tcpClient.Connected
+                if ($HasjsonServerHost) {
+                    $tcpClient.close()
+                }
+             }
         }
         catch {
             $HasjsonServerHost=$False
@@ -162,6 +182,15 @@ function totvsGetDataModelPeriodAcc {
         $resultPeriodosSRD=Invoke-RestMethod @params
 
         $Uri=$ini.rest.EndPoint
+
+        $SystemUri = [System.Uri]$Uri
+        $tcpClient = New-Object System.Net.Sockets.TCPClient
+        $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+        if (-not $tcpClient.Connected) {
+            return $False
+        }
+        $tcpClient.close()
+
         $Auth=$ini.rest.Auth
         $codEmp=$ini.rest.codEmp
         $codModel=$ini.rest.codModel
@@ -278,11 +307,9 @@ function totvsGetDataModelPeriodAcc {
             try {
                 $result=Invoke-RestMethod @params
             } catch {
-                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-                Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-                Write-Host $_
+                Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                 continue
-            }            
+            }
 
             if ($result.TotalPages -ne $RowspPageMax)
             {
@@ -308,12 +335,10 @@ function totvsGetDataModelPeriodAcc {
                 try {
                     $result=Invoke-RestMethod @params
                 } catch {
-                    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-                    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-                    Write-Host $_
+                    Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                     continue
-                }            
-                
+                }
+
             }
             else
             {
@@ -380,22 +405,32 @@ function totvsGetDataModelPeriodAcc {
 
                     $jsonServerdbJSON=($jsonServerdbJSON | ConvertTo-Json -depth 100 -Compress)
 
+                    $jsonServerURI = $jsonServerHost
+                    $SystemUri = [System.Uri]$jsonServerURI
+                    $tcpClient = New-Object System.Net.Sockets.TCPClient
+                    $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
+                    $Connected = $tcpClient.Connected
+                    if ($Connected) {
+                        $tcpClient.close()
+                    }
+
                     [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
-                    if (($lExistOutFile)-and($HasjsonServerHost))
+                    if (($lExistOutFile)-and($HasjsonServerHost)-and($Connected))
                     {
+                        $jsonServerdbEndPoint += "/0"
+                        $jsonServerURI += $jsonServerdbEndPoint
                         $params = @{
-                            Uri=$jsonServerHost+$jsonServerdbEndPoint
-                            Method="POST"
+                            Uri=$jsonServerURI
+                            Method="PUT"
                             ContentType=$ContentType
                             Body=$jsonServerdbJSON
                             TimeoutSec=0
                         }
                         try {
-                            Invoke-RestMethod @params
+                            $jsonServerResult=Invoke-RestMethod @params
                         } catch {
-                            Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-                            Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-                            Write-Host $_
+                            [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
+                            Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                         }
                     } else {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
@@ -431,11 +466,9 @@ function totvsGetDataModelPeriodAcc {
                     $result=Invoke-RestMethod @params
                     $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
                 } catch {
-                    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-                    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-                    Write-Host $_
                     $hasNextPage=$False
-                }            
+                    Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
+                }
 
                 start-sleep -Seconds .05
 
