@@ -288,11 +288,6 @@ function totvsGetDataModelPeriod {
             $PageNumber=1
             $RowspPage=1
 
-            $headers=@{}
-            $headers.Add("ServerHost","Connecti")
-            $headers.Add("Authorization",$Auth)
-            $headers.Add("tenantId",$codEmp)
-
             $Body=@{
                 PageNumber=$PageNumber
                 RowspPage=$RowspPage
@@ -313,8 +308,8 @@ function totvsGetDataModelPeriod {
             try {
                 $result=Invoke-RestMethod @params
             } catch {
-                Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
-                continue
+                Write-Host $_
+                break
             }
 
             Clear-Variable Body
@@ -345,8 +340,8 @@ function totvsGetDataModelPeriod {
                     Clear-Variable result
                     $result=Invoke-RestMethod @params
                 } catch {
-                    Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
-                    continue
+                    Write-Host $_
+                    break
                 }
                 
                 Clear-Variable Body
@@ -449,7 +444,7 @@ function totvsGetDataModelPeriod {
                             $jsonServerResult=Invoke-RestMethod @params
                         } catch {
                             [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
-                            Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
+                            Write-Host $_
                         }
                         Clear-Variable params
                         Clear-Variable jsonServerResult
@@ -491,7 +486,7 @@ function totvsGetDataModelPeriod {
                     $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
                 } catch {
                     $hasNextPage=$False
-                    Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
+                    Write-Host $_
                 }
                 
                 Clear-Variable Body

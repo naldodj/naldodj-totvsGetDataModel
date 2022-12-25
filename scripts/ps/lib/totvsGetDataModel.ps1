@@ -224,8 +224,8 @@ function totvsGetDataModel {
                 Clear-Variable result
                 $result=Invoke-RestMethod @params
             } catch {
-                Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
-                continue
+                Write-Host $_
+                return $False
             }
             
             Clear-Variable Body
@@ -326,7 +326,7 @@ function totvsGetDataModel {
                         $jsonServerResult=Invoke-RestMethod @params
                     } catch {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
-                        Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
+                        Write-Host $_
                     }
                     Clear-Variable params
                     Clear-Variable jsonServerResult
@@ -368,7 +368,7 @@ function totvsGetDataModel {
                 $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
             } catch {
                 $hasNextPage=$False
-                Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
+                Write-Host $_
             }
 
             Clear-Variable Body
