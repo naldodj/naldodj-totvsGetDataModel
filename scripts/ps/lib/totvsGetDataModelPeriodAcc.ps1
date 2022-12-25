@@ -82,12 +82,12 @@ function totvsGetDataModelPeriodAcc {
         $SystemUri = [System.Uri]$Uri
         $tcpClient = New-Object System.Net.Sockets.TCPClient
         $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
-        Clear-Variable $SystemUri
+        Clear-Variable SystemUri
         if (-not $tcpClient.Connected) {
             return $False
         }
         $tcpClient.close()
-        Clear-Variable $tcpClient
+        Clear-Variable tcpClient
 
         $MonthIni="01"
         $MonthFim="12"
@@ -141,12 +141,12 @@ function totvsGetDataModelPeriodAcc {
                 $SystemUri = [System.Uri]$jsonServerURI
                 $tcpClient = New-Object System.Net.Sockets.TCPClient
                 $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
-                Clear-Variable $SystemUri
+                Clear-Variable SystemUri
                 $HasjsonServerHost = $tcpClient.Connected
                 if ($HasjsonServerHost) {
                     $tcpClient.close()
                 }
-                Clear-Variable $tcpClient
+                Clear-Variable tcpClient
              }
         }
         catch {
@@ -184,20 +184,20 @@ function totvsGetDataModelPeriodAcc {
 
         $resultPeriodosSRD=Invoke-RestMethod @params
 
-        Clear-Variable $Body
-        Clear-Variable $params
+        Clear-Variable Body
+        Clear-Variable params
 
         $Uri=$ini.rest.EndPoint
 
         $SystemUri = [System.Uri]$Uri
         $tcpClient = New-Object System.Net.Sockets.TCPClient
         $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
-        Clear-Variable $SystemUri
+        Clear-Variable SystemUri
         if (-not $tcpClient.Connected) {
             return $False
         }
         $tcpClient.close()
-        Clear-Variable $tcpClient
+        Clear-Variable tcpClient
 
         $Auth=$ini.rest.Auth
         $codEmp=$ini.rest.codEmp
@@ -206,7 +206,7 @@ function totvsGetDataModelPeriodAcc {
 
         $jsonPath=$ini.rest.jsonPath
         
-        Clear-Variable $ini
+        Clear-Variable ini
         
         if (-not $jsonPath.EndsWith("\"))
         {
@@ -317,8 +317,8 @@ function totvsGetDataModelPeriodAcc {
 
             try {
                 $result=Invoke-RestMethod @params
-                Clear-Variable $Body
-                Clear-Variable $params
+                Clear-Variable Body
+                Clear-Variable params
             } catch {
                 Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                 continue
@@ -346,10 +346,10 @@ function totvsGetDataModelPeriodAcc {
                 }
 
                 try {
-                    Clear-Variable $result
+                    Clear-Variable result
                     $result=Invoke-RestMethod @params
-                    Clear-Variable $Body
-                    Clear-Variable $params
+                    Clear-Variable Body
+                    Clear-Variable params
                 } catch {
                     Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                     continue
@@ -404,7 +404,7 @@ function totvsGetDataModelPeriodAcc {
 
                 [System.IO.File]::WriteAllLines($OutFile,$JsonResult,$Utf8NoBomEncoding)
 
-                Clear-Variable $JsonResult
+                Clear-Variable JsonResult
 
                 if ($HasjsonServerdb){
 
@@ -429,12 +429,12 @@ function totvsGetDataModelPeriodAcc {
                     $SystemUri = [System.Uri]$jsonServerURI
                     $tcpClient = New-Object System.Net.Sockets.TCPClient
                     $tcpClient.Connect($SystemUri.Host,$SystemUri.Port)
-                    Clear-Variable $SystemUri
+                    Clear-Variable SystemUri
                     $Connected = $tcpClient.Connected
                     if ($Connected) {
                         $tcpClient.close()
                     }
-                    Clear-Variable $tcpClient
+                    Clear-Variable tcpClient
 
                     [bool]$lExistOutFile=[System.IO.File]::Exists($OutFile)
                     if (($lExistOutFile)-and($HasjsonServerHost)-and($Connected))
@@ -450,8 +450,8 @@ function totvsGetDataModelPeriodAcc {
                         }
                         try {
                             $jsonServerResult=Invoke-RestMethod @params
-                            Clear-Variable $params
-                            Clear-Variable $jsonServerResult
+                            Clear-Variable params
+                            Clear-Variable jsonServerResult
                         } catch {
                             [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                             Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
@@ -460,8 +460,8 @@ function totvsGetDataModelPeriodAcc {
                         [System.IO.File]::WriteAllLines($OutFile,$jsonServerdbJSON,$Utf8NoBomEncoding)
                     }
 
-                    Clear-Variable $jsonServerdbEndPointData
-                    Clear-Variable $jsonServerdbJSON
+                    Clear-Variable jsonServerdbEndPointData
+                    Clear-Variable jsonServerdbJSON
 
                 }
 
@@ -489,7 +489,7 @@ function totvsGetDataModelPeriodAcc {
                 }
 
                 try {
-                    Clear-Variable $result
+                    Clear-Variable result
                     $result=Invoke-RestMethod @params
                     $hasNextPage=(($result.hasNextPage) -or ($PageNumber -eq $result.TotalPages))
                 } catch {
@@ -497,8 +497,8 @@ function totvsGetDataModelPeriodAcc {
                     Write-Host ($_ | ConvertTo-Json -depth 100 -Compress)
                 }
 
-                Clear-Variable $Body
-                Clear-Variable $params
+                Clear-Variable Body
+                Clear-Variable params
 
                 start-sleep -Seconds .05
 
