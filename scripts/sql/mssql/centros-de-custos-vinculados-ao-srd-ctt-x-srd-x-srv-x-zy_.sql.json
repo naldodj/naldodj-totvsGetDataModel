@@ -3,6 +3,7 @@
     ["SRD990","&RetSQLName('SRD')"],
     ["SRV990","&RetSQLName('SRV')"],
     ["ZY_990","&RetSQLName('ZY_')"],
-    ["CTT990","&RetSQLName('CTT')"]
+    ["CTT990","&RetSQLName('CTT')"],
+    ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"]
   ]
 }
