@@ -1,2 +1,2 @@
 # naldodj-totvsGetDataModel
-Obter dados do Protheus usando Script em PowerShell e API REST customizada
+Obter dados do TOTVS Microsiga Protheus usando Script em PowerShell e API REST customizada
