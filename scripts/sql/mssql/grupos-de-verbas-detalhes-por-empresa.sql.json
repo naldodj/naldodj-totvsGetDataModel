@@ -11,6 +11,7 @@
     ["!TTSNAME!","'__tts_afxutils__'"],
     ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.T.)"],
     ["!PIVOTTABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"],    
+    ["SRA990","&RetSQLName('SRA')"],
     ["SRD990","&RetSQLName('SRD')"],
     ["SRV990","&RetSQLName('SRV')"],
     ["ZY_990","&RetSQLName('ZY_')"],
