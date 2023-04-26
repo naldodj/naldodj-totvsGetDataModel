@@ -14,6 +14,7 @@
     ["!CCATE!","&cacheData():get('AFXUTILS_PARAMETERS','!CCATE!','')"],
     ["!FUNCAODE!","&cacheData():get('AFXUTILS_PARAMETERS','!FUNCAODE!','')"],
     ["!FUNCAOATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FUNCAOATE!','')"], 
-    ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"]    
+    ["!TABLENAME!","&tmpTableUtils():tmpTableName('afxutils',.F.)"],
+    ["!TBLTMPMONTHS!","&tmpTableUtils():tmpTableName('afxutils',.F.)"]    
   ]
 }

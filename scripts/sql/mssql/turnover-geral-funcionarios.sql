@@ -200,14 +200,23 @@ BEGIN
                       ,TURNOVER.RJ_DESC
                       ,TURNOVER.RA_MAT
                       ,TURNOVER.SRARECNO
-                      ,TURNOVER.TTRFSAI
-                      ,TURNOVER.TTRFENT
-                      ,TFUNIMES=CAST((TURNOVER.TFUNMES-TURNOVER.TFUNADMMES) AS FLOAT)
-                      ,TFUNADMMES=CAST(TURNOVER.TFUNADMMES AS FLOAT)
-                      ,TFUNMES=CAST(TURNOVER.TFUNMES AS FLOAT)
-                      ,TFUNDEMMES=CAST(TURNOVER.TFUNDEMMES AS FLOAT)
-                      ,TFUNFMES=CAST((TURNOVER.TFUNMES-TURNOVER.TFUNDEMMES) AS FLOAT)
+                      ,TTRFSAI=SUM(TURNOVER.TTRFSAI)
+                      ,TTRFENT=SUM(TURNOVER.TTRFENT)
+                      ,TFUNIMES=SUM(CAST((TURNOVER.TFUNMES-TURNOVER.TFUNADMMES) AS FLOAT))
+                      ,TFUNADMMES=SUM(CAST(TURNOVER.TFUNADMMES AS FLOAT))
+                      ,TFUNMES=SUM(CAST(TURNOVER.TFUNMES AS FLOAT))
+                      ,TFUNDEMMES=SUM(CAST(TURNOVER.TFUNDEMMES AS FLOAT))
+                      ,TFUNFMES=SUM(CAST((TURNOVER.TFUNMES-TURNOVER.TFUNDEMMES) AS FLOAT))
                 FROM TURNOVER
+                GROUP 
+                   BY  TURNOVER.PERIODO
+                      ,TURNOVER.RA_FILIAL
+                      ,TURNOVER.RA_CC
+                      ,TURNOVER.CTT_DESC01
+                      ,TURNOVER.RA_CODFUNC
+                      ,TURNOVER.RJ_DESC
+                      ,TURNOVER.RA_MAT
+                      ,TURNOVER.SRARECNO
             )
         SELECT DISTINCT
               TURNOVERT.PERIODO
@@ -230,5 +239,5 @@ BEGIN
         INTO !TABLENAME!
         FROM TURNOVERT
     END
-    drop table !TBLTMPMONTHS!
+    DROP TABLE !TBLTMPMONTHS!
 END
