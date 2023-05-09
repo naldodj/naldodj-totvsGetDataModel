@@ -5,6 +5,7 @@
     ["SRE990","&RetSQLName('SRE')"],
     ["SRJ990","&RetSQLName('SRJ')"],
     ["CTT990","&RetSQLName('CTT')"],
+    ["SR7990","&RetSQLName('SR7')"],
     ["!EMPRESA!","&cacheData():get('AFXUTILS_PARAMETERS','!EMPRESA!','')"],
     ["!FILIALDE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALDE!','')"],
     ["!FILIALATE!","&cacheData():get('AFXUTILS_PARAMETERS','!FILIALATE!','')"],
